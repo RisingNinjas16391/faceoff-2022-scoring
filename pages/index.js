@@ -68,7 +68,6 @@ export default function Home() {
                     return <p key={team.id}>{team.team}: {team.points}</p>
                 })}
             </main>
-
         </div>
     )
 }
