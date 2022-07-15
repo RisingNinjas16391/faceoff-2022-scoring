@@ -1,7 +1,9 @@
-import '../styles/globals.css'
+import { ClientProvider } from "../lib/supabase";
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
-}
+const App = ({ Component, pageProps }) => (
+    <ClientProvider>
+      <Component {...pageProps} />
+    </ClientProvider>
+)
 
-export default MyApp
+export default App
