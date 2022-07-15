@@ -5,8 +5,10 @@ import {
     Button,
     ButtonGroup,
     Checkbox,
+    Grid,
     Paper,
-    Stack
+    Stack,
+    Typography
 } from "@mui/material";
 import { red } from "@mui/material/colors";
 
@@ -22,6 +24,8 @@ export default function ScoringPage({ team }) {
     ]);
     const [multipliers, setMultipliers] = useState([false, false, false]);
     const [penalties, setPenalties] = useState(0);
+
+    const [points, setPoints] = useState(0);
 
     useEffect(() => {
         getTeams();
@@ -60,6 +64,8 @@ export default function ScoringPage({ team }) {
             .from("points")
             .update({ points, data: { elevator, multipliers, penalties } })
             .eq("team", team);
+
+        setPoints(points);
 
         return { data };
     }
@@ -112,14 +118,15 @@ export default function ScoringPage({ team }) {
     };
 
     return (
-        <div>
-            <h1>{team} Scoring</h1>
+        <Grid>
+            <Typography variant="h2" textAlign="center" gutterBottom>{team} Scoring</Typography>
             <ButtonGroup
                 size="large"
                 aria-label="small outlined button group"
                 sx={{
                     display: "flex",
                     flexWrap: "wrap",
+                    justifyContent: "center",
                     "& > :not(style)": {
                         m: 0,
                         width: 105,
@@ -143,6 +150,7 @@ export default function ScoringPage({ team }) {
                         sx={{
                             display: "flex",
                             flexWrap: "wrap",
+                            justifyContent: "center",
                             "& > :not(style)": {
                                 m: 1,
                                 width: 128,
@@ -182,6 +190,7 @@ export default function ScoringPage({ team }) {
                 sx={{
                     display: "flex",
                     flexWrap: "wrap",
+                    justifyContent: "center",
                     "& > :not(style)": {
                         m: 1,
                         width: 128,
@@ -210,6 +219,7 @@ export default function ScoringPage({ team }) {
                     );
                 })}
             </Box>
-        </div>
+            <Typography variant="h5" textAlign="center">Points: {points}</Typography>
+        </Grid>
     );
 }
