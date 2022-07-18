@@ -1,23 +1,14 @@
 import { useEffect, useState } from "react";
 import { useClient } from "../lib/supabase";
-import { Button, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import Head from "next/head";
+
 import Elevator from "./Elevator";
 import MultiplierBar, { MULTIPLY } from "./MultiplierBar";
-import { styled } from "@mui/system";
-import { purple } from "@mui/material/colors";
-
-import ReportProblemIcon from "@mui/icons-material/ReportProblem";
+import PenaltyBar from "./PenaltyBar";
+import ClimbBar from "./ClimbBar";
 
 const PENALTY_DEDUCTION = 5;
-
-const ColorButton = styled(Button)(({ theme }) => ({
-  fontSize: 45,
-  backgroundColor: purple[500],
-  "&:hover": {
-    backgroundColor: purple[700],
-  },
-}));
 
 export default function ScoringPage({ team, displayName }) {
   const [elevator, setElevator] = useState([
@@ -168,83 +159,13 @@ export default function ScoringPage({ team, displayName }) {
           {displayName} Scoring
         </Typography>
 
-        <Stack
-          direction="row"
-          spacing={4}
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            marginBottom: "15px",
-          }}
-        >
-          <Button
-            variant="contained"
-            color={climb[0] ? "success" : "error"}
-            onClick={() => {
-              handleClimbClick(0);
-            }}
-          >
-            Autonomous Climb
-          </Button>
-          <Button
-            variant="contained"
-            color={climb[1] ? "success" : "error"}
-            onClick={() => {
-              handleClimbClick(1);
-            }}
-          >
-            Endgame Climb
-          </Button>
-        </Stack>
-        <Stack
-          direction="row"
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            "& > :not(style)": {
-              m: 0,
-              width: 105,
-              height: 75,
-            },
-          }}
-        >
-          <Paper
-            disabled
-            variant="outlined"
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: 45,
-              color: purple[700],
-              "& svg": {
-                fontSize: "60px",
-              },
-            }}
-          >
-            <ReportProblemIcon />
-          </Paper>
-          <ColorButton
-            disabled={penalties === 0}
-            onClick={handlePenaltyDecrement}
-            variant="contained"
-          >
-            -
-          </ColorButton>
-          <Button disabled variant="outlined" sx={{ fontSize: 45 }}>
-            {penalties}
-          </Button>
-          <ColorButton
-            onClick={handlePenaltyIncrement}
-            variant="contained"
-            size="large"
-            disableRipple
-          >
-            +
-          </ColorButton>
-        </Stack>
+        <ClimbBar handleClimbClick={handleClimbClick} climb={climb} />
+
+        <PenaltyBar
+          penalties={penalties}
+          increment={handlePenaltyIncrement}
+          decrement={handlePenaltyDecrement}
+        />
 
         <Elevator
           elevator={elevator}
