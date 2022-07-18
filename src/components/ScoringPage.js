@@ -57,7 +57,7 @@ export default function ScoringPage({ team, displayName }) {
   async function updatePoints(team, points) {
     const { data, error } = await client
       .from("points")
-      .update({ points, data: { elevator, multipliers, penalties } })
+      .update({ points, data: { elevator, multipliers, penalties, climb } })
       .eq("team", team);
 
     setPoints(points);
