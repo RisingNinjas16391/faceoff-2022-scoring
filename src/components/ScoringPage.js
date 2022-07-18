@@ -1,34 +1,23 @@
 import { useEffect, useState } from "react";
 import { useClient } from "../lib/supabase";
-import { Button, Grid, Stack, Typography } from "@mui/material";
+import { Button, Grid, Paper, Stack, Typography } from "@mui/material";
 import Head from "next/head";
 import Elevator from "./Elevator";
 import MultiplierBar, { MULTIPLY } from "./MultiplierBar";
+import { styled } from "@mui/system";
+import { purple } from "@mui/material/colors";
+
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 
 const PENALTY_DEDUCTION = 5;
 
-// 40
-// 20
-
-const styles = {
-  boxShadow: "none",
+const ColorButton = styled(Button)(({ theme }) => ({
   fontSize: 45,
-  backgroundColor: "#0063cc",
-  borderColor: "#0063cc",
+  backgroundColor: purple[500],
   "&:hover": {
-    backgroundColor: "#0069d9",
-    borderColor: "#0062cc",
-    boxShadow: "none",
+    backgroundColor: purple[700],
   },
-  "&:active": {
-    boxShadow: "none",
-    backgroundColor: "#0062cc",
-    borderColor: "#005cbf",
-  },
-  "&:focus": {
-    boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
-  },
-};
+}));
 
 export default function ScoringPage({ team, displayName }) {
   const [elevator, setElevator] = useState([
@@ -221,29 +210,40 @@ export default function ScoringPage({ team, displayName }) {
             },
           }}
         >
-          <Button variant="contained" disabled>
-            Penalties
-          </Button>
-          <Button
+          <Paper
+            disabled
+            variant="outlined"
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: 45,
+              color: purple[700],
+              "& svg": {
+                fontSize: "60px",
+              },
+            }}
+          >
+            <ReportProblemIcon />
+          </Paper>
+          <ColorButton
             disabled={penalties === 0}
             onClick={handlePenaltyDecrement}
             variant="contained"
-            sx={styles}
           >
             -
-          </Button>
-          <Button disabled variant="outlined">
+          </ColorButton>
+          <Button disabled variant="outlined" sx={{ fontSize: 45 }}>
             {penalties}
           </Button>
-          <Button
+          <ColorButton
             onClick={handlePenaltyIncrement}
             variant="contained"
-            sx={styles}
             size="large"
             disableRipple
           >
             +
-          </Button>
+          </ColorButton>
         </Stack>
 
         <Elevator
