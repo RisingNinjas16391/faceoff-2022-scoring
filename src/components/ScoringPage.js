@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useClient } from "../lib/supabase";
 import { Grid, Typography } from "@mui/material";
 import Head from "next/head";
 
@@ -8,9 +7,12 @@ import MultiplierBar, { MULTIPLY } from "./MultiplierBar";
 import PenaltyBar from "./PenaltyBar";
 import ClimbBar from "./ClimbBar";
 
+import scoringService from "../lib/scoring";
+import { useClient } from "../lib/supabase";
+
 const PENALTY_DEDUCTION = 5;
 
-const DEFAULTS = {
+export const DEFAULTS = {
   elevator: [
     [false, false, false],
     [false, false, false],
@@ -19,7 +21,6 @@ const DEFAULTS = {
   multipliers: new Array(3).fill(false),
   penalties: 0,
   climb: new Array(2).fill(false),
-  points: 0,
 };
 
 export default function ScoringPage({ team, displayName }) {
@@ -29,36 +30,27 @@ export default function ScoringPage({ team, displayName }) {
   const [climb, setClimb] = useState(DEFAULTS.climb);
 
   const [loading, setLoading] = useState(true);
-  const [points, setPoints] = useState(DEFAULTS.points);
+  const [points, setPoints] = useState(0);
 
   const client = useClient();
 
+  const fetch = async () => {
+    const response = await scoringService.fetchTeam(team);
+    const scoringData = response.data;
+
+    setPoints(0);
+
+    setElevator(scoringData.elevator);
+    setMultipliers(scoringData.multipliers);
+    setPenalties(scoringData.penalties);
+    setClimb(scoringData.climb);
+
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetch = async () => {
-      const { data, status, error } = await client
-        .from("points")
-        .select("*")
-        .eq("team", team)
-        .single();
-
-      if (status !== 200 || error) {
-        return;
-      }
-
-      const scoringData = data.data;
-
-      setPoints(data.points);
-
-      setElevator(scoringData.elevator);
-      setMultipliers(scoringData.multipliers);
-      setPenalties(scoringData.penalties);
-      setClimb(scoringData.climb);
-
-      setLoading(false);
-    };
-
     fetch();
-  }, [client, team]);
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -68,14 +60,7 @@ export default function ScoringPage({ team, displayName }) {
           const data = v.new;
 
           if (data.type === "reset") {
-            setElevator(DEFAULTS.elevator);
-            setMultipliers(DEFAULTS.multipliers);
-            setPenalties(DEFAULTS.penalties);
-            setClimb(DEFAULTS.climb);
-
-            setPoints(DEFAULTS.points);
-
-            updatePoints(team, 0);
+            fetch();
           }
         })
         .subscribe();
@@ -91,17 +76,6 @@ export default function ScoringPage({ team, displayName }) {
   useEffect(() => {
     updateScore();
   }, [multipliers, elevator, penalties, climb]);
-
-  const updatePoints = async (team, points) => {
-    const { data, error } = await client
-      .from("points")
-      .update({ points, data: { elevator, multipliers, penalties, climb } })
-      .eq("team", team);
-
-    setPoints(points);
-
-    return { data };
-  };
 
   const handleClick = (rowIndex, entryIndex, value) => {
     const newElevator = [...elevator];
@@ -169,9 +143,12 @@ export default function ScoringPage({ team, displayName }) {
       return;
     }
 
-    updatePoints(team, totalPoints).then((r) => {
-      console.log("Points updated to: ", totalPoints);
-    });
+    scoringService
+      .setPoints(team, totalPoints, { elevator, multipliers, climb, penalties })
+      .then((r) => {
+        setPoints(totalPoints);
+        console.log("Points updated to: ", totalPoints);
+      });
   };
 
   const canClick = (rowIdx, entryIdx) => {

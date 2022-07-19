@@ -2,6 +2,7 @@ import { Button } from "@mui/material";
 import Head from "next/head";
 
 import { useEffect, useState } from "react";
+import scoringService from "../lib/scoring";
 import { client } from "../lib/supabase";
 
 export default function Home() {
@@ -45,15 +46,6 @@ export default function Home() {
       });
   };
 
-  const reset = () => {
-    client
-      .from("events")
-      .insert({ type: "reset" })
-      .then((data, error) => {
-        console.log("Ran reset event");
-      });
-  };
-
   const updateTeam = (updated) => {
     setTeams(
       teams.map((team) => {
@@ -79,7 +71,7 @@ export default function Home() {
             </p>
           );
         })}
-        <Button variant="contained" onClick={() => reset()}>
+        <Button variant="contained" onClick={() => scoringService.reset()}>
           Reset
         </Button>
       </main>
