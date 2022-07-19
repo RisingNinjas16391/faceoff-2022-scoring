@@ -12,7 +12,18 @@ export default function useTimer() {
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    timerService.init();
+    const fetch = async () => {
+      const data = await timerService.init();
+
+      if (data) {
+        setTimer(data.duration);
+
+        setStarted(data.started);
+        setPaused(true);
+      }
+    };
+
+    fetch();
   }, []);
 
   useInterval(() => {
@@ -23,20 +34,32 @@ export default function useTimer() {
     setTimer((timer) => timer - 1);
   }, 1000);
 
+  useInterval(() => {
+    timerService.update(timer, started, paused);
+    console.log("Updating time database document");
+  }, 5000);
+
   const start = () => {
     timerService.start();
     setStarted(true);
   };
 
-  const pause = () => {
-    timerService.pause(timer);
+  const toggle = () => {
+    if (paused) {
+      timerService.unpause(timer);
+    } else {
+      timerService.pause(timer);
+    }
+    setPaused((paused) => !paused);
+  };
+
+  const reset = () => {
+    timerService.reset();
+
     setPaused(true);
+    setStarted(false);
+    setTimer(150);
   };
 
-  const unpause = () => {
-    timerService.unpause();
-    setPaused(false);
-  };
-
-  return [timer, start, pause];
+  return [timer, start, toggle, reset, paused, started];
 }

@@ -1,28 +1,26 @@
 import { client } from "./supabase";
 
 const init = async () => {
-  await pause();
-
-  const { response, status, error } = await client
+  const { data, error } = await client
     .from("timer")
     .select("*")
     .eq("id", 1)
     .single();
 
-  if (error || status !== 200) {
+  if (error) {
     console.error(error);
     return;
   }
 
-  console.log(response);
-
-  return response;
+  return data;
 };
 
 const start = async () => {
-  const { response, error } = await client
+  const { data, error } = await client
     .from("timer")
-    .update({ started: true, started_at: Date.now() })
+    .update({
+      started: true,
+    })
     .eq("id", 1);
 
   if (error) {
@@ -30,13 +28,13 @@ const start = async () => {
     return;
   }
 
-  return response;
+  return data;
 };
 
-const pause = async (timeLeft) => {
-  const { response, error } = await client
+const pause = async (duration) => {
+  const { data, error } = await client
     .from("timer")
-    .update({ paused: true, duration: timeLeft })
+    .update({ paused: true, duration })
     .eq("id", 1);
 
   if (error) {
@@ -44,18 +42,50 @@ const pause = async (timeLeft) => {
     return;
   }
 
-  return response;
+  return data;
+};
+
+const update = async (duration, started, paused) => {
+  const { data, error } = await client
+    .from("timer")
+    .update({ duration, started, paused })
+    .eq("id", 1);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  return data;
 };
 
 const unpause = async () => {
-  const { response, error } = await client
+  const { data, error } = await client
     .from("timer")
-    .update({ paused: false });
+    .update({ paused: false })
+    .eq("id", 1);
 
   if (error) {
     console.error(error);
+    return;
   }
+
+  return data;
 };
 
-const timerService = { init, start, pause, unpause };
+const reset = async () => {
+  const { data, error } = await client
+    .from("timer")
+    .update({ duration: 150, started: false, paused: true })
+    .eq("id", 1);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  return data;
+};
+
+const timerService = { init, start, pause, unpause, update, reset };
 export default timerService;
