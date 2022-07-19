@@ -10,18 +10,26 @@ import ClimbBar from "./ClimbBar";
 
 const PENALTY_DEDUCTION = 5;
 
+const DEFAULTS = {
+  elevator: [
+    [false, false, false],
+    [false, false, false],
+    [false, false, false],
+  ],
+  multipliers: new Array(3).fill(false),
+  penalties: 0,
+  climb: new Array(2).fill(false),
+  points: 0,
+};
+
 export default function ScoringPage({ team, displayName }) {
-  const [elevator, setElevator] = useState([
-    [false, false, false],
-    [false, false, false],
-    [false, false, false],
-  ]);
-  const [multipliers, setMultipliers] = useState([false, false, false]);
-  const [penalties, setPenalties] = useState(0);
-  const [climb, setClimb] = useState([false, false]);
+  const [elevator, setElevator] = useState(DEFAULTS.elevator);
+  const [multipliers, setMultipliers] = useState(DEFAULTS.multipliers);
+  const [penalties, setPenalties] = useState(DEFAULTS.penalties);
+  const [climb, setClimb] = useState(DEFAULTS.climb);
 
   const [loading, setLoading] = useState(true);
-  const [points, setPoints] = useState(0);
+  const [points, setPoints] = useState(DEFAULTS.points);
 
   const client = useClient();
 
@@ -39,6 +47,8 @@ export default function ScoringPage({ team, displayName }) {
 
       const scoringData = data.data;
 
+      setPoints(data.points);
+
       setElevator(scoringData.elevator);
       setMultipliers(scoringData.multipliers);
       setPenalties(scoringData.penalties);
@@ -51,10 +61,38 @@ export default function ScoringPage({ team, displayName }) {
   }, [client, team]);
 
   useEffect(() => {
+    setTimeout(() => {
+      client
+        .from("events")
+        .on("INSERT", (v) => {
+          const data = v.new;
+
+          if (data.type === "reset") {
+            setElevator(DEFAULTS.elevator);
+            setMultipliers(DEFAULTS.multipliers);
+            setPenalties(DEFAULTS.penalties);
+            setClimb(DEFAULTS.climb);
+
+            setPoints(DEFAULTS.points);
+
+            updatePoints(team, 0);
+          }
+        })
+        .subscribe();
+    }, 1000);
+
+    return () => {
+      client.removeAllSubscriptions().then(() => {
+        console.log("Removed all subscriptions");
+      });
+    };
+  }, [client]);
+
+  useEffect(() => {
     updateScore();
   }, [multipliers, elevator, penalties, climb]);
 
-  const updatePoints = async (team, points, ready) => {
+  const updatePoints = async (team, points) => {
     const { data, error } = await client
       .from("points")
       .update({ points, data: { elevator, multipliers, penalties, climb } })

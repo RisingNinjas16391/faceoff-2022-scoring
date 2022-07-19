@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import Head from "next/head";
 
 import { useEffect, useState } from "react";
@@ -44,6 +45,15 @@ export default function Home() {
       });
   };
 
+  const reset = () => {
+    client
+      .from("events")
+      .insert({ type: "reset" })
+      .then((data, error) => {
+        console.log("Ran reset event");
+      });
+  };
+
   const updateTeam = (updated) => {
     setTeams(
       teams.map((team) => {
@@ -69,6 +79,9 @@ export default function Home() {
             </p>
           );
         })}
+        <Button variant="contained" onClick={() => reset()}>
+          Reset
+        </Button>
       </main>
     </div>
   );
