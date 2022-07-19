@@ -18,9 +18,9 @@ export const DEFAULTS = {
     [false, false, false],
     [false, false, false],
   ],
-  multipliers: new Array(3).fill(false),
+  multipliers: [false, false, false],
   penalties: 0,
-  climb: new Array(2).fill(false),
+  climb: [false, false],
 };
 
 export default function ScoringPage({ team, displayName }) {
