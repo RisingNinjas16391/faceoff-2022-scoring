@@ -2,12 +2,15 @@ import { Button } from "@mui/material";
 import Head from "next/head";
 
 import { useEffect, useState } from "react";
+import useTimer from "../hooks/useTimer";
 import scoringService from "../lib/scoring";
 import { client } from "../lib/supabase";
 
 export default function Home() {
   const [teams, setTeams] = useState([]);
   const [update, setUpdate] = useState(null);
+
+  const [timer, start] = useTimer();
 
   useEffect(() => {
     getTeams();
@@ -74,6 +77,8 @@ export default function Home() {
         <Button variant="contained" onClick={() => scoringService.reset()}>
           Reset
         </Button>
+        <h2>Time left {timer}</h2>
+        <Button onClick={(e) => start()}>Start</Button>
       </main>
     </div>
   );
