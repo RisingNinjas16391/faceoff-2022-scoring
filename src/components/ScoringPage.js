@@ -20,19 +20,12 @@ export default function ScoringPage({ team, displayName }) {
   const [penalties, setPenalties] = useState(0);
   const [climb, setClimb] = useState([false, false]);
 
+  const [loading, setLoading] = useState(true);
   const [points, setPoints] = useState(0);
-
-  useEffect(() => {
-    getTeams();
-  }, []);
-
-  useEffect(() => {
-    updateScore();
-  }, [multipliers, elevator, penalties, climb]);
 
   const client = useClient();
 
-  const getTeams = () => {
+  useEffect(() => {
     const fetch = async () => {
       const { data, status, error } = await client
         .from("points")
@@ -49,12 +42,19 @@ export default function ScoringPage({ team, displayName }) {
       setElevator(scoringData.elevator);
       setMultipliers(scoringData.multipliers);
       setPenalties(scoringData.penalties);
+      setClimb(scoringData.climb);
+
+      setLoading(false);
     };
 
     fetch();
-  };
+  }, [client, team]);
 
-  async function updatePoints(team, points) {
+  useEffect(() => {
+    updateScore();
+  }, [multipliers, elevator, penalties, climb]);
+
+  const updatePoints = async (team, points, ready) => {
     const { data, error } = await client
       .from("points")
       .update({ points, data: { elevator, multipliers, penalties, climb } })
@@ -63,7 +63,7 @@ export default function ScoringPage({ team, displayName }) {
     setPoints(points);
 
     return { data };
-  }
+  };
 
   const handleClick = (rowIndex, entryIndex, value) => {
     const newElevator = [...elevator];
@@ -95,6 +95,10 @@ export default function ScoringPage({ team, displayName }) {
   };
 
   const updateScore = () => {
+    if (loading) {
+      return;
+    }
+
     let totalPoints = 0;
 
     for (let i = 0; i < elevator.length; i++) {
@@ -122,6 +126,11 @@ export default function ScoringPage({ team, displayName }) {
     }
 
     totalPoints -= PENALTY_DEDUCTION * penalties;
+
+    if (points === totalPoints) {
+      return;
+    }
+
     updatePoints(team, totalPoints).then((r) => {
       console.log("Points updated to: ", totalPoints);
     });
