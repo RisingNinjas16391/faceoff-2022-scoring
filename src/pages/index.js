@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import CompetitionClock from "../components/CompetitionClock";
 import ElevatorView from "../components/ElevatorView";
+import TeamScore from "../components/TeamScore";
 import useTimer from "../hooks/useTimer";
 import scoringService from "../lib/scoring";
 import { client } from "../lib/supabase";
@@ -93,44 +94,6 @@ export default function Home() {
     }
   };
 
-  const makeTeamComponent = (team, name) => {
-    if (team === null) {
-      return;
-    }
-
-    return (
-      <Paper variant="outlined" sx={{ backgroundColor: "#2C3333" }}>
-        <Typography
-          variant="h2"
-          sx={{
-            color: team.team,
-            textAlign: "center",
-            fontFamily: "Bank Gothic",
-            fontSize: "75px",
-          }}
-        >
-          {name}
-        </Typography>
-        <Typography
-          variant="h2"
-          sx={{
-            color: "#FFFFFF",
-            textAlign: "center",
-            fontFamily: "Bank Gothic",
-            fontSize: "50px",
-          }}
-        >
-          {team.points}
-        </Typography>
-        <ElevatorView
-          elevator={team.data ? team.data.elevator : []}
-          multipliers={team.data ? team.data.multipliers : []}
-          name={team.team}
-        />
-      </Paper>
-    );
-  };
-
   return (
     <div>
       <Head>
@@ -163,8 +126,8 @@ export default function Home() {
             },
           }}
         >
-          {makeTeamComponent(blue, "Blue")}
-          {makeTeamComponent(red, "Red")}
+          <TeamScore name="Blue" team={blue} />
+          <TeamScore name="Red" team={red} />
         </Box>
       </Box>
     </div>

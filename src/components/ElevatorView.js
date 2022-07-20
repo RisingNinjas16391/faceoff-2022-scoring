@@ -26,7 +26,7 @@ export default function ElevatorView({ name, elevator, multipliers }) {
                 >
                   <Image
                     src={entry ? `/${name}.png` : "/nothing.png"}
-                    alt="ALandscape picture"
+                    alt="A block"
                     width={50}
                     height={50}
                   />
