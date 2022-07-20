@@ -13,7 +13,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ElevatorView({ name, elevator }) {
+export default function ElevatorView({ name, elevator, multipliers }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={0.5}>
@@ -21,7 +21,9 @@ export default function ElevatorView({ name, elevator }) {
           return row.map((entry, entryIdx) => {
             return (
               <Grid key={entryIdx} item xs={4}>
-                <Item>
+                <Item
+                  sx={{ backgroundColor: multipliers[entryIdx] && "green" }}
+                >
                   <Image
                     src={entry ? `/${name}.png` : "/nothing.png"}
                     alt="ALandscape picture"

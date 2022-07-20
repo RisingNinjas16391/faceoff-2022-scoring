@@ -124,6 +124,7 @@ export default function Home() {
         </Typography>
         <ElevatorView
           elevator={team.data ? team.data.elevator : []}
+          multipliers={team.data ? team.data.multipliers : []}
           name={team.team}
         />
       </Paper>
