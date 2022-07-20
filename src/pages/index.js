@@ -3,6 +3,7 @@ import Head from "next/head";
 
 import { useEffect, useState } from "react";
 import CompetitionClock from "../components/CompetitionClock";
+import ElevatorView from "../components/ElevatorView";
 import useTimer from "../hooks/useTimer";
 import scoringService from "../lib/scoring";
 import { client } from "../lib/supabase";
@@ -93,6 +94,10 @@ export default function Home() {
   };
 
   const makeTeamComponent = (team, name) => {
+    if (team === null) {
+      return;
+    }
+
     return (
       <Paper variant="outlined" sx={{ backgroundColor: "#2C3333" }}>
         <Typography
@@ -112,11 +117,15 @@ export default function Home() {
             color: "#FFFFFF",
             textAlign: "center",
             fontFamily: "Bank Gothic",
-            fontSize: "250px",
+            fontSize: "50px",
           }}
         >
           {team.points}
         </Typography>
+        <ElevatorView
+          elevator={team.data ? team.data.elevator : []}
+          name={team.team}
+        />
       </Paper>
     );
   };
@@ -149,7 +158,7 @@ export default function Home() {
             "& > :not(style)": {
               m: 1,
               width: 1280,
-              height: 550,
+              height: 400,
             },
           }}
         >
