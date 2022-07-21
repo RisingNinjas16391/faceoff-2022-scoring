@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-// import Blink from "./Blink";
+import Blink from "./Blink/Blink";
 
 const FONT = {
   fontFamily: "Bank Gothic",
@@ -8,16 +8,7 @@ const FONT = {
 
 const BLINK = ["00:03", "00:02", "00:01"];
 
-export default function CompetitionClock({
-  currentState,
-  timer,
-  lead,
-  isWinnerFinal,
-}) {
-  const getName = () => {
-    return timer.display;
-  };
-
+export default function CompetitionClock({ timer, lead, isWinnerFinal }) {
   const getLead = () => {
     if (lead === "red") {
       return `Red ${isWinnerFinal ? "Wins!" : "Lead"}`;
@@ -45,18 +36,18 @@ export default function CompetitionClock({
   const getTimeComponent = () => {
     const time = getTime();
 
-    // if (BLINK.includes(time) && currentState !== "endwait") {
-    //   return (
-    //     <Blink
-    //       variant="h3"
-    //       fontFamily={FONT.fontFamily}
-    //       textAlign={FONT.textAlign}
-    //       fontSize="125px"
-    //       color="#EEAD1E"
-    //       text={time}
-    //     />
-    //   );
-    // }
+    if (BLINK.includes(time)) {
+      return (
+        <Blink
+          variant="h3"
+          fontFamily={FONT.fontFamily}
+          textAlign={FONT.textAlign}
+          fontSize="125px"
+          color="#EEAD1E"
+          text={time}
+        />
+      );
+    }
 
     return (
       <Typography
@@ -83,7 +74,7 @@ export default function CompetitionClock({
           color: "#FFFFFF",
         }}
       >
-        {getName()}
+        {timer.display}
       </Typography>
       <Typography
         variant="h2"
