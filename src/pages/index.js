@@ -1,13 +1,20 @@
-import { Button } from "@mui/material";
+import { Box, Button, Divider, Typography, Paper } from "@mui/material";
 import Head from "next/head";
 
 import { useEffect, useState } from "react";
+import CompetitionClock from "../components/CompetitionClock";
+import ElevatorView from "../components/ElevatorView";
+import TeamScore from "../components/TeamScore";
+import useTimer from "../hooks/useTimer";
 import scoringService from "../lib/scoring";
 import { client } from "../lib/supabase";
 
 export default function Home() {
-  const [teams, setTeams] = useState([]);
+  const [red, setRed] = useState({});
+  const [blue, setBlue] = useState({});
   const [update, setUpdate] = useState(null);
+
+  const [state, start, toggle, reset, paused, started] = useTimer();
 
   useEffect(() => {
     getTeams();
@@ -35,23 +42,57 @@ export default function Home() {
     }
   }, [update]);
 
+  useEffect(() => {
+    const eventListener = (event) => {
+      const code = event.code;
+
+      if (code === "KeyR") {
+        reset();
+        scoringService.reset();
+      } else if (code === "Enter" && !started) {
+        start();
+      } else if (code === "Space" && started) {
+        event.preventDefault();
+        toggle();
+      }
+    };
+
+    document.addEventListener("keydown", eventListener);
+
+    return () => {
+      document.removeEventListener("keydown", eventListener);
+    };
+  });
+
   const getTeams = () => {
     client
       .from("points")
       .select("*")
       .then(({ data, error }) => {
         if (!error) {
-          setTeams(data);
+          for (let team in data) {
+            updateTeam(data[team]);
+          }
         }
       });
   };
 
   const updateTeam = (updated) => {
-    setTeams(
-      teams.map((team) => {
-        return team.id === updated.id ? updated : team;
-      })
-    );
+    if (updated.team === "red") {
+      setRed(updated);
+    } else if (updated.team === "blue") {
+      setBlue(updated);
+    }
+  };
+
+  const getLead = () => {
+    if (!(red && blue) || red.points === blue.points) {
+      return "tie";
+    } else if (red.points > blue.points) {
+      return "red";
+    } else {
+      return "blue";
+    }
   };
 
   return (
@@ -62,19 +103,34 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1>Scores</h1>
-        {teams?.map((team) => {
-          return (
-            <p key={team.id}>
-              {team.team}: {team.points}
-            </p>
-          );
-        })}
-        <Button variant="contained" onClick={() => scoringService.reset()}>
-          Reset
-        </Button>
-      </main>
+      <style jsx global>{`
+        body {
+          background: #121212;
+        }
+      `}</style>
+
+      <Box>
+        <CompetitionClock
+          currentState={"Autonomous"}
+          lead={getLead()}
+          timer={state}
+          isWinnerFinal={false}
+        />
+        <Divider></Divider>
+        <Box
+          sx={{
+            display: "flex",
+            "& > :not(style)": {
+              m: 1,
+              width: 1280,
+              height: 400,
+            },
+          }}
+        >
+          <TeamScore name="Blue" team={blue} />
+          <TeamScore name="Red" team={red} />
+        </Box>
+      </Box>
     </div>
   );
 }
