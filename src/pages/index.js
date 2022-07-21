@@ -14,7 +14,7 @@ export default function Home() {
   const [blue, setBlue] = useState({});
   const [update, setUpdate] = useState(null);
 
-  const [timer, start, toggle, reset, paused, started] = useTimer();
+  const [state, start, toggle, reset, paused, started] = useTimer();
 
   useEffect(() => {
     getTeams();
@@ -48,6 +48,7 @@ export default function Home() {
 
       if (code === "KeyR") {
         reset();
+        scoringService.reset();
       } else if (code === "Enter" && !started) {
         start();
       } else if (code === "Space" && started) {
@@ -112,7 +113,7 @@ export default function Home() {
         <CompetitionClock
           currentState={"Autonomous"}
           lead={getLead()}
-          timer={timer}
+          timer={state}
           isWinnerFinal={false}
         />
         <Divider></Divider>

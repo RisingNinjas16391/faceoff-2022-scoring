@@ -31,10 +31,14 @@ const start = async () => {
   return data;
 };
 
-const pause = async (duration) => {
+const pause = async (state) => {
   const { data, error } = await client
     .from("timer")
-    .update({ paused: true, duration })
+    .update({
+      paused: true,
+      state_key: state.key,
+      state_duration: state.stateTimer,
+    })
     .eq("id", 1);
 
   if (error) {
@@ -45,10 +49,15 @@ const pause = async (duration) => {
   return data;
 };
 
-const update = async (duration, started, paused) => {
+const update = async (state, started, paused) => {
   const { data, error } = await client
     .from("timer")
-    .update({ duration, started, paused })
+    .update({
+      started,
+      paused,
+      state_key: state.key,
+      state_duration: state.duration,
+    })
     .eq("id", 1);
 
   if (error) {
@@ -73,10 +82,15 @@ const unpause = async () => {
   return data;
 };
 
-const reset = async () => {
+const reset = async (key, duration) => {
   const { data, error } = await client
     .from("timer")
-    .update({ duration: 150, started: false, paused: true })
+    .update({
+      state_key: key,
+      state_duration: duration,
+      started: false,
+      paused: true,
+    })
     .eq("id", 1);
 
   if (error) {

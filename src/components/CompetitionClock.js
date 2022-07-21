@@ -15,7 +15,7 @@ export default function CompetitionClock({
   isWinnerFinal,
 }) {
   const getName = () => {
-    return currentState.charAt(0).toUpperCase() + currentState.slice(1);
+    return timer.display;
   };
 
   const getLead = () => {
@@ -39,7 +39,7 @@ export default function CompetitionClock({
   };
 
   const getTime = () => {
-    return new Date(timer * 1000).toISOString().slice(14, 19);
+    return new Date(timer.duration * 1000).toISOString().slice(14, 19);
   };
 
   const getTimeComponent = () => {
