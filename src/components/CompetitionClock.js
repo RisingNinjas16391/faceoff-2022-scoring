@@ -74,7 +74,7 @@ export default function CompetitionClock({ timer, lead, isWinnerFinal }) {
           color: "#FFFFFF",
         }}
       >
-        {timer.display}
+        {timer.key === "finished" ? "Finished" : timer.display}
       </Typography>
       <Typography
         variant="h2"
