@@ -126,12 +126,5 @@ export default function useTimer() {
     setStarted(false);
   };
 
-  return [
-    { ...state, duration: stateTimer },
-    start,
-    toggle,
-    reset,
-    paused,
-    started,
-  ];
+  return [{ ...state, duration: stateTimer }, start, toggle, reset, started];
 }

@@ -1,9 +1,8 @@
-import { Box, Button, Divider, Typography, Paper } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import Head from "next/head";
 
 import { useEffect, useState } from "react";
 import CompetitionClock from "../components/CompetitionClock";
-import ElevatorView from "../components/ElevatorView";
 import TeamScore from "../components/TeamScore";
 import useTimer from "../hooks/useTimer";
 import scoringService from "../lib/scoring";
@@ -14,7 +13,7 @@ export default function Home() {
   const [blue, setBlue] = useState({});
   const [update, setUpdate] = useState(null);
 
-  const [state, start, toggle, reset, paused, started] = useTimer();
+  const [state, start, toggle, reset, started] = useTimer();
 
   useEffect(() => {
     getTeams();
