@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useClient } from "../lib/supabase";
+import useSound from "use-sound";
 import timerService from "../lib/timer";
 import useInterval from "./useInterval";
 
@@ -7,11 +7,13 @@ const STATES = [
   {
     key: "auto",
     display: "Autonomous",
+    sound: "/start.mp3",
     duration: 20,
   },
   {
     key: "countdown",
     display: "Countdown",
+    sound: "/countdown.mp3",
     duration: 8,
   },
   {
@@ -22,6 +24,7 @@ const STATES = [
   {
     key: "endgame",
     display: "End Game",
+    sound: "/endgame.mp3",
     duration: 30,
   },
 ];
@@ -35,14 +38,17 @@ const STATE_DETAILS = STATES.map((s) => ({
   display: s.display,
 }));
 
-export default function useTimer() {
-  const client = useClient();
+const STATE_SOUNDS = [...STATES.map((s) => s.sound), "./finished.mp3"];
 
+export default function useTimer() {
   const [state, setState] = useState(STATE_DETAILS[0]);
   const [stateTimer, setStateTimer] = useState(STATE_DURATIONS[0]);
 
   const [started, setStarted] = useState(false);
   const [paused, setPaused] = useState(false);
+
+  const [sound, setSound] = useState("/start.mp3");
+  const [play] = useSound(sound);
 
   useEffect(() => {
     const fetch = async () => {
@@ -73,6 +79,8 @@ export default function useTimer() {
       if (STATE_KEYS.length - 1 === currentIdx) {
         setState({ key: "finished", display: "Finished" });
         setStateTimer(0);
+
+        playSound();
         return;
       }
 
@@ -84,13 +92,13 @@ export default function useTimer() {
       setState(details);
       setStateTimer(duration);
 
+      playSound();
+
       timerService.update({ ...details, duration }, started, paused);
       return;
     }
 
     setStateTimer((t) => t - 1);
-
-    console.log("State", state, stateTimer);
   }, 1000);
 
   useInterval(() => {
@@ -101,10 +109,20 @@ export default function useTimer() {
       });
   }, 5000);
 
+  const playSound = () => {
+    if (sound !== undefined) {
+      play();
+    }
+
+    setSound((sound) => STATE_SOUNDS[STATE_SOUNDS.indexOf(sound) + 1]);
+  };
+
   const start = () => {
     timerService.start();
     setStarted(true);
     setPaused(false);
+
+    playSound();
   };
 
   const toggle = () => {
@@ -121,6 +139,7 @@ export default function useTimer() {
 
     setStateTimer(STATE_DURATIONS[0]);
     setState(STATE_DETAILS[0]);
+    setSound(STATE_SOUNDS[0]);
 
     setPaused(true);
     setStarted(false);
