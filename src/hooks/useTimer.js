@@ -94,13 +94,17 @@ export default function useTimer() {
   }, 1000);
 
   useInterval(() => {
-    timerService.update({ ...state, stateTimer }, started, paused);
-    console.log("Updating time database document");
+    timerService
+      .update({ ...state, duration: stateTimer }, started, paused)
+      .then((r) => {
+        console.log("Updating time database document", r);
+      });
   }, 5000);
 
   const start = () => {
     timerService.start();
     setStarted(true);
+    setPaused(false);
   };
 
   const toggle = () => {
