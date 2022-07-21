@@ -67,7 +67,7 @@ export default function useTimer() {
       return;
     }
 
-    if (stateTimer === 0) {
+    if (stateTimer === 1) {
       const currentIdx = STATE_KEYS.indexOf(state.key);
 
       if (STATE_KEYS.length - 1 === currentIdx) {
