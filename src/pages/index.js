@@ -11,7 +11,9 @@ import { client } from "../lib/supabase";
 export default function Home() {
   const [red, setRed] = useState({});
   const [blue, setBlue] = useState({});
+
   const [update, setUpdate] = useState(null);
+  const [isWinnerFinal, setWinnerFinal] = useState(false);
 
   const [state, start, toggle, reset, started] = useTimer();
 
@@ -53,6 +55,8 @@ export default function Home() {
       } else if (code === "Space" && started) {
         event.preventDefault();
         toggle();
+      } else if (code === "KeyF" && state.key === "finished") {
+        setWinnerFinal(!isWinnerFinal);
       }
     };
 
@@ -110,10 +114,9 @@ export default function Home() {
 
       <Box>
         <CompetitionClock
-          currentState={"Autonomous"}
           lead={getLead()}
           timer={state}
-          isWinnerFinal={false}
+          isWinnerFinal={isWinnerFinal}
         />
         <Divider></Divider>
         <Box
