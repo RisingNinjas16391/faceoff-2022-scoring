@@ -50,6 +50,9 @@ export default function Home() {
   useEffect(() => {
     const eventListener = (event) => {
       const code = event.code;
+      if (!user) {
+        return;
+      }
 
       if (code === "KeyR") {
         reset();
