@@ -3,12 +3,16 @@ import Head from "next/head";
 
 import { useEffect, useState } from "react";
 import CompetitionClock from "../components/CompetitionClock";
+import LoginPage from "../components/LoginPage";
 import TeamScore from "../components/TeamScore";
 import useTimer from "../hooks/useTimer";
+import { useAuth } from "../lib/auth";
 import scoringService from "../lib/scoring";
 import { client } from "../lib/supabase";
 
 export default function Home() {
+  const { user } = useAuth();
+
   const [red, setRed] = useState({});
   const [blue, setBlue] = useState({});
 
@@ -97,6 +101,10 @@ export default function Home() {
       return "blue";
     }
   };
+
+  if (!user) {
+    return <LoginPage />;
+  }
 
   return (
     <div>
