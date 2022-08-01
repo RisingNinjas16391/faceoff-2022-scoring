@@ -5,7 +5,6 @@ import { useClient } from "../lib/supabase";
 
 export default function LoginPage() {
   const [password, setPassword] = useState("");
-  const client = useClient();
   const { signIn } = useAuth();
 
   const handleChange = (e) => {
