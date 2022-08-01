@@ -22,6 +22,10 @@ export default function Home() {
   const [state, start, toggle, reset, started] = useTimer();
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+
     getTeams();
 
     setTimeout(() => {
@@ -41,7 +45,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (update) {
+    if (update && user) {
       updateTeam(update);
       setUpdate(null);
     }
