@@ -1,12 +1,12 @@
 import { AuthProvider } from "../lib/auth";
 import { ClientProvider } from "../lib/supabase";
 
-const App = ({ Component, pageProps }) => {
+const App = ({ Component, pageProps }) => (
   <ClientProvider>
     <AuthProvider>
       <Component {...pageProps} />
     </AuthProvider>
-  </ClientProvider>;
-};
+  </ClientProvider>
+);
 
 export default App;
