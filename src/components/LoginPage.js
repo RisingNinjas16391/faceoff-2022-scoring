@@ -45,6 +45,7 @@ export default function LoginPage() {
               <TextField
                 label="Password"
                 type={"password"}
+                required={true}
                 value={password}
                 onChange={handleChange}
               ></TextField>
