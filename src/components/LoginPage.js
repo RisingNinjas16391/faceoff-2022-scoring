@@ -1,22 +1,31 @@
-import { Button, Grid, Paper, TextField } from "@mui/material";
+import { Alert, Button, Grid, Paper, TextField } from "@mui/material";
 import { useState } from "react";
 import { useAuth } from "../lib/auth";
-import { useClient } from "../lib/supabase";
 
 export default function LoginPage() {
   const [password, setPassword] = useState("");
+  const [warn, setWarn] = useState(false);
   const { signIn } = useAuth();
 
   const handleChange = (e) => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { error } = signIn({ email: "ninjineers@ahschool.com", password });
+
+    if (!password) {
+      return;
+    }
+
+    const { error } = await signIn({
+      email: "ninjineers@ahschool.com",
+      password,
+    });
 
     if (error) {
-      alert("Wrong password!");
+      setWarn(true);
+      setTimeout(() => setWarn(false), 3000);
     }
     setPassword("");
   };
@@ -49,6 +58,7 @@ export default function LoginPage() {
           </Grid>
         </Paper>
       </form>
+      {warn && <Alert severity="error">Incorrect password!</Alert>}
     </div>
   );
 }
