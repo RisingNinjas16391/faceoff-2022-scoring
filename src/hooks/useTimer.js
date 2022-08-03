@@ -8,7 +8,7 @@ const STATES = [
     key: "auto",
     display: "Autonomous",
     sound: "/start.mp3",
-    duration: 20,
+    duration: 30,
   },
   {
     key: "countdown",
