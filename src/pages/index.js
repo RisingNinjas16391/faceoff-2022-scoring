@@ -3,12 +3,16 @@ import Head from "next/head";
 
 import { useEffect, useState } from "react";
 import CompetitionClock from "../components/CompetitionClock";
+import LoginPage from "../components/LoginPage";
 import TeamScore from "../components/TeamScore";
 import useTimer from "../hooks/useTimer";
+import { useAuth } from "../lib/auth";
 import scoringService from "../lib/scoring";
 import { client } from "../lib/supabase";
 
 export default function Home() {
+  const { user } = useAuth();
+
   const [red, setRed] = useState({});
   const [blue, setBlue] = useState({});
 
@@ -18,6 +22,10 @@ export default function Home() {
   const [state, start, toggle, reset, started] = useTimer();
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+
     getTeams();
 
     setTimeout(() => {
@@ -34,10 +42,10 @@ export default function Home() {
         console.log("Removed all subscriptions");
       });
     };
-  }, []);
+  }, [user]);
 
   useEffect(() => {
-    if (update) {
+    if (update && user) {
       updateTeam(update);
       setUpdate(null);
     }
@@ -46,6 +54,9 @@ export default function Home() {
   useEffect(() => {
     const eventListener = (event) => {
       const code = event.code;
+      if (!user) {
+        return;
+      }
 
       if (code === "KeyR") {
         reset();
@@ -97,6 +108,10 @@ export default function Home() {
       return "blue";
     }
   };
+
+  if (!user) {
+    return <LoginPage />;
+  }
 
   return (
     <div>
