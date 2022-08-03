@@ -42,7 +42,7 @@ export default function Home() {
         console.log("Removed all subscriptions");
       });
     };
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (update && user) {
