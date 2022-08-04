@@ -1,5 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
-import { useState } from "react";
+import { Box, Typography } from "@mui/material";
 import Blink from "./Blink/Blink";
 
 const FONT = {
@@ -9,42 +8,7 @@ const FONT = {
 
 const BLINK = ["00:03", "00:02", "00:01"];
 
-const TEAMS = [
-  {
-    name: "Wall-E",
-    number: 1,
-    participants: ["Jackson", "Alec", "Sanjay"],
-  },
-  {
-    name: "Speedrunners",
-    number: 2,
-    participants: ["Troy", "Taha"],
-  },
-  {
-    name: "Gamer Snakers",
-    number: 3,
-    participants: ["Sam", "Santi"],
-  },
-  {
-    name: "The End",
-    number: 4,
-    participants: ["Sasha", "Nathan"],
-  },
-  {
-    name: "Undecided",
-    number: 6,
-    participants: ["Max", "Lucas", "Austin"],
-  },
-  {
-    name: "Pyreus",
-    number: 8,
-    participants: ["Alex", "Camden", "Adam"],
-  },
-];
-
 export default function CompetitionClock({ timer, lead, isWinnerFinal }) {
-  const [redTeam, setRedTeam] = useState(TEAMS[0]);
-
   const getLead = () => {
     if (lead === "red") {
       return `Red ${isWinnerFinal ? "Wins!" : "Lead"}`;
@@ -122,36 +86,6 @@ export default function CompetitionClock({ timer, lead, isWinnerFinal }) {
       >
         {getLead()}
       </Typography>
-      <Paper
-        variant="outlined"
-        sx={{
-          backgroundColor: "#2C3333",
-          minWidth: "400px",
-          position: "absolute",
-          top: "100px",
-          right: "40px",
-        }}
-      >
-        <Typography
-          variant="h2"
-          sx={{
-            ...FONT,
-            fontSize: "40px",
-            color: "red",
-          }}
-        >
-          {redTeam.name}
-        </Typography>
-        {redTeam.participants.map((name) => (
-          <Typography
-            key={name}
-            variant="h4"
-            sx={{ ...FONT, fontSize: "25px", color: "#FFFFFF" }}
-          >
-            {name}
-          </Typography>
-        ))}
-      </Paper>
     </Box>
   );
 }
