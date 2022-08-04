@@ -60,6 +60,7 @@ export default function Home() {
 
       if (code === "KeyR") {
         reset();
+        setWinnerFinal(false);
         scoringService.reset();
       } else if (code === "Enter" && !started) {
         start();
