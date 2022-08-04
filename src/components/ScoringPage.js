@@ -179,6 +179,7 @@ export default function ScoringPage({ team, displayName }) {
           gutterBottom
           color={team}
           fontFamily="Bank Gothic"
+          fontSize="3.5rem"
         >
           {displayName} Scoring
         </Typography>
