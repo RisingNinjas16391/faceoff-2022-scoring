@@ -16,6 +16,8 @@ export default function Elevator({ elevator, canClick, team, handleClick }) {
                 m: 1,
                 width: "25%",
                 height: "25%",
+                maxWidth: "128px",
+                maxHeight: "128px",
               },
             }}
           >
