@@ -20,8 +20,8 @@ export default function PenaltyBar({ penalties, increment, decrement }) {
         justifyContent: "center",
         "& > :not(style)": {
           m: 0,
-          width: "45%",
-          height: "30%",
+          width: "35%",
+          height: "25%",
           maxWidth: 105,
           maxHeight: 75,
         },
