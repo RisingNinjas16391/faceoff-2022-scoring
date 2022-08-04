@@ -145,8 +145,8 @@ export default function Home() {
             },
           }}
         >
-          <TeamScore name="Blue" team={blue} />
           <TeamScore name="Red" team={red} />
+          <TeamScore name="Blue" team={blue} />
         </Box>
       </Box>
     </div>
