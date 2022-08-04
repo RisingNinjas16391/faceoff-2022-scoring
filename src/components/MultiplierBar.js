@@ -13,7 +13,7 @@ export default function MultiplierBar({ multipliers, handleMultiplyClick }) {
         justifyContent: "center",
         "& > :not(style)": {
           m: 1,
-          width: "30%",
+          width: "25%",
           height: "15%",
           maxWidth: 128,
           maxHeight: 64,

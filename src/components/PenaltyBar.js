@@ -20,8 +20,8 @@ export default function PenaltyBar({ penalties, increment, decrement }) {
         justifyContent: "center",
         "& > :not(style)": {
           m: 0,
-          width: "35%",
-          height: "25%",
+          width: "22%",
+          height: "15%",
           maxWidth: 105,
           maxHeight: 75,
         },
@@ -36,7 +36,7 @@ export default function PenaltyBar({ penalties, increment, decrement }) {
           alignItems: "center",
           color: purple[700],
           "& svg": {
-            fontSize: "5rem",
+            fontSize: "4.5rem",
           },
         }}
       >
