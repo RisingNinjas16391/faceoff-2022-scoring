@@ -179,9 +179,9 @@ export default function ScoringPage({ team, displayName }) {
           gutterBottom
           color={team}
           fontFamily="Bank Gothic"
-          fontSize="3.4rem"
+          fontSize="4rem"
         >
-          {displayName} Scoring
+          {displayName}
         </Typography>
 
         <ClimbBar handleClimbClick={handleClimbClick} climb={climb} />
