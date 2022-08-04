@@ -14,8 +14,8 @@ export default function Elevator({ elevator, canClick, team, handleClick }) {
               justifyContent: "center",
               "& > :not(style)": {
                 m: 1,
-                width: 128,
-                height: 128,
+                width: "25%",
+                height: "25%",
               },
             }}
           >
@@ -35,7 +35,7 @@ export default function Elevator({ elevator, canClick, team, handleClick }) {
                       handleClick(idx, entryIdx, !entry);
                     }}
                     sx={{
-                      "& .MuiSvgIcon-root": { fontSize: 128 },
+                      "& .MuiSvgIcon-root": { fontSize: "7em" },
                       "&.Mui-checked": {
                         color: team === "red" && red[600],
                       },
