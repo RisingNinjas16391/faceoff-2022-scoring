@@ -130,7 +130,7 @@ export default function ScoringPage({ team, displayName }) {
     }
 
     if (climb[0]) {
-      totalPoints += 40;
+      totalPoints += 30;
     }
 
     if (climb[1]) {
